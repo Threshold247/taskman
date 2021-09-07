@@ -10,24 +10,48 @@ app.use(express.json());
 const pool = new Pool({});
 
 router
-  .route("/")
-  .get(function (req, res) {
-    console.log(req.originalUrl)
-    pool.query("SELECT * FROM tasks", (error, result) => {
-      res.json(result.rows);
-    })
+	.route("/")
+	.get(function (req, res) {
+		console.log(req.originalUrl)
+		pool
+		.query("SELECT * FROM tasks")
+		.then((result) => res.json(result.rows))
+		.catch((error) => console.log(error));
+	
+})	
+	.post(function (req,res) {
+		console.log(req.method,req.originalUrl)
+		const {description, date, reminder} =req.body;
+		const addTaskQuery = "INSERT INTO tasks (description,date,reminder) VALUES ($1,$2,$3)";
+		
+		pool
+			.query(addTaskQuery, [description,date,reminder])
+			.then((result) => res.send("Task Added"))
+			.catch((error) => console.log(error));
+		
 })
 
-  router
+router
     .route("/:id")
-    .get('/tasks/:id', function(req, res) {
-  	   console.log(req.originalUrl)
+    .get(function (req, res) {
+  	 console.log(req.originalUrl)
   	    const {id} = req.params
-  	    const query = `SELECT * FROM tasks WHERE id =${id}`
-        pool.query(query, (error, result) => {
-          res.json(result.rows);
-    })
+  	    const query = "SELECT * FROM tasks WHERE id =$1";
+        pool
+			.query(query, [id])
+			.then((result) => res.json(result.rows))
+			.catch((error) => console.log(error));
 })
-
+		
+	.delete(function (req,res) {
+	 console.log(req.originalUrl)
+		const {id} =req.params
+		const deleteTaskQuery = "DELETE FROM tasks WHERE id =$1";
+		
+		pool
+			.query(deleteTaskQuery, [id])
+			.then((result) => res.send("Task Deleted"))
+			.catch((error)=>console.log(error));
+})
 
 module.exports = router;
