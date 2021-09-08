@@ -21,11 +21,11 @@ router
 })
 	.post(function (req,res) {
 		console.log(req.method,req.originalUrl)
-		const {description, date, reminder} =req.body;
-		const addTaskQuery = "INSERT INTO tasks (description,date,reminder) VALUES ($1,$2,$3)";
+		const {description, day, reminder} =req.body;
+		const addTaskQuery = "INSERT INTO tasks (description,day,reminder) VALUES ($1,$2,$3)";
 
 		pool
-			.query(addTaskQuery, [description,date,reminder])
+			.query(addTaskQuery, [description,day,reminder])
 			.then((result) => res.send("Task Added"))
 			.catch((error) => console.log(error));
 
