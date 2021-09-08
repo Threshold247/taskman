@@ -26,7 +26,7 @@ router
 
 		pool
 			.query(addTaskQuery, [description,day,reminder])
-			.then((result) => res.send("Task Added"))
+			.then((result) => res.json(result.rows))
 			.catch((error) => console.log(error));
 
 })
