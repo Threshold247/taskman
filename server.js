@@ -9,7 +9,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-const pool = new Pool({});
+const pool = new Pool({
+	connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+			}
+  });
 
 app.get('/', function(req,res) {
 	res.send('Welcome');
