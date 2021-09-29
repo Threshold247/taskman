@@ -16,9 +16,9 @@ const pool = new Pool({
 			}
   });
 
-//app.get('/', function(req,res) {
-//	res.send('Welcome');
-//})
+app.get('/', function(req,res) {
+	res.send('Welcome');
+ })
 app.use('/tasks',tasks);
 
 
