@@ -7,12 +7,25 @@ const { Pool } = require("pg");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+if (process.env.DATABASE_URL) {
+    pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+           }
+    });
+} else {
+// if on local
+    pool = new Pool({
+        user: process.env.PGUSER,
+        password: process.env.PGPASSWORD,
+        port: process.env.PGPORT,
+        host: process.env.PGHOST,
+        database: process.env.PGDATABASE
+    });
+}
+
+
 
 router
 	.route("/")
