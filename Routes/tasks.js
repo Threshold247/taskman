@@ -7,15 +7,21 @@ const { Pool } = require("pg");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const pool = new Pool({});
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 router
 	.route("/")
 	.get(async function(req, res) {
 		console.log(req.method,req.originalUrl)
 		try {
-			const result = await pool.query("SELECT * FROM tasks");
-			const data = await res.json(result.rows);
+			const client = await pool.connect();
+			const result = await client.query("SELECT * FROM tasks");
+			const data = res.json(result.rows);
 
 		}catch(error) {
 			 console.log(error);
